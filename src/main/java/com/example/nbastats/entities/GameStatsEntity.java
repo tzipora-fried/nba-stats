@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class GameStatsEntity {
-    private Long player_id;
-    private String game_date;
+    private Long playerId;
+    private String gameDate;
     private int points;
     private int rebounds;
     private int assists;
@@ -13,5 +13,5 @@ public class GameStatsEntity {
     private int blocks;
     private int fouls;
     private int turnovers;
-    private double minutes_played;
+    private double minutesPlayed;
 }

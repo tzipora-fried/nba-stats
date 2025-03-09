@@ -6,6 +6,6 @@ import lombok.Data;
 public class PlayerEntity {
     private Long id;
     private String name;
-    private String id_number;
+    private String idNumber;
     private Long teamId;
 }
