@@ -18,7 +18,7 @@ public class RedisUpdater {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
-    @Scheduled(fixedRate = 60000) // רץ כל דקה
+    @Scheduled(fixedRate = 60000)
     public void updateRedisCache() {
         List<Map<String, Object>> changes = jdbcTemplate.queryForList("SELECT * FROM change_log");
 
@@ -33,7 +33,6 @@ public class RedisUpdater {
             }
         }
 
-        // ננקה את הטבלה אחרי שסיימנו לעדכן
         jdbcTemplate.update("DELETE FROM change_log");
     }
 
