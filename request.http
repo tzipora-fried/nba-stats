@@ -1,0 +1,19 @@
+POST http://localhost:8080/api/players/create/
+Content-Type: application/json
+
+{
+  "name": "Player One",
+  "id_number": "123456744",
+  "team_name": "Team Home",
+  "game_stats": {
+    "game_date": "2025-03-08T20:00:00",
+    "points": 25,
+    "rebounds": 10,
+    "assists": 5,
+    "steals": 2,
+    "blocks": 1,
+    "fouls": 3,
+    "turnovers": 4,
+    "minutes_played": 34.5
+  }
+}
