@@ -21,14 +21,11 @@ public class PlayerService {
 
         int teamId = getTeamIdByName(playerRequestDTO.getTeam_name());
         if (teamId == -1) {
-            // אם הקבוצה לא קיימת, ניצור אותה
             teamId = saveTeam(playerRequestDTO.getTeam_name());
         }
 
         savePlayer(playerRequestDTO, teamId);
-
         saveGameStats(playerRequestDTO, teamId);
-
         return "Player and game stats inserted successfully!";
     }
 
@@ -50,7 +47,6 @@ public class PlayerService {
     private int saveTeam(String teamName) {
         String sql = "INSERT INTO teams (name) VALUES (?)";
         jdbcTemplate.update(sql, teamName);
-
         String selectSql = "SELECT id FROM teams WHERE name = ?";
         return jdbcTemplate.queryForObject(selectSql, new Object[]{teamName}, Integer.class);
     }
@@ -64,9 +60,7 @@ public class PlayerService {
         String sql = "INSERT INTO game_stats (game_date, player_id, points, rebounds, assists, steals, blocks, fouls, turnovers, minutes_played)\n" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Long playerId = getPlayerIdByNumber(playerRequestDTO.getId_number());
-
         GameStats gameStats = playerRequestDTO.getGame_stats();
-
         jdbcTemplate.update(
                 sql,
                 gameStats.getGame_date(),
