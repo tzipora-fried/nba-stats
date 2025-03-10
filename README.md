@@ -13,7 +13,7 @@ This project is a backend system for managing and retrieving NBA player statisti
 
 ## 📊 System Architecture
 
-![img.png](img.png)
+![image](https://github.com/user-attachments/assets/0044a167-2e52-4e0d-8980-db2a62055fa7)
 
 ---
 
