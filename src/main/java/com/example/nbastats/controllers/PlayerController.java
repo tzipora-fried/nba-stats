@@ -13,7 +13,7 @@ public class PlayerController {
     private PlayerService playerService;
 
     @PostMapping("/create")
-    public String createPlayer(@RequestBody PlayerRequestDTO playerRequestDTO) {
-        return playerService.createPlayer(playerRequestDTO);
+    public void createPlayer(@RequestBody PlayerRequestDTO playerRequestDTO) {
+        playerService.createPlayer(playerRequestDTO);
     }
 }

@@ -11,11 +11,14 @@ public class StatsService {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
-    public Map<String, Object> getPlayerStats(int playerId) {
-        return (Map<String, Object>) redisTemplate.opsForHash().get("player:stats", "player:" + playerId);
+    public Map<Object, Object> getPlayerStats(int playerId, String seasonYear) {
+        String redisKey = "player:" + playerId + ":season:" + seasonYear;
+        return redisTemplate.opsForHash().entries(redisKey);
     }
 
-    public Map<String, Object> getTeamStats(int teamId) {
-        return (Map<String, Object>) redisTemplate.opsForHash().get("team:stats", "team:" + teamId);
+    public Map<Object, Object> getTeamStats(int teamId, String seasonYear) {
+        String redisKey = "team:" + teamId + ":season:" + seasonYear;
+        return redisTemplate.opsForHash().entries(redisKey);
     }
+
 }

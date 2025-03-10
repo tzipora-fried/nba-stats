@@ -1,9 +1,9 @@
 {
     "name": "Player One",
-    "id_number": "12345678",
-    "team_name": "Team Home",
-    "game_stats": {
-      "game_date": "2025-03-08T20:00:00",
+    "idNumber": "12345678",
+    "teamName": "Team Home",
+    "gameStats": {
+      "gameDate": "2025-03-08T20:00:00",
       "points": 25,
       "rebounds": 10,
       "assists": 5,
@@ -11,6 +11,6 @@
       "blocks": 1,
       "fouls": 3,
       "turnovers": 4,
-      "minutes_played": 34.5
+      "minutesPlayed": 34.5
     }
 }
