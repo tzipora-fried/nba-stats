@@ -18,29 +18,28 @@ public class PlayerService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-
     public void createPlayer(PlayerRequestDTO playerRequestDTO) {
-        if (checkIfPlayerExists(playerRequestDTO.getIdNumber())) {
-          logger.error("Player with ID number {} already exists", playerRequestDTO.getIdNumber());
-          return;
+        Integer playerId = getPlayerIdByIdNumber(playerRequestDTO.getIdNumber());
+        if (playerId == -1) {
+            int teamId = getTeamIdByName(playerRequestDTO.getTeamName());
+            if (teamId == -1) {
+                teamId = saveTeam(playerRequestDTO.getTeamName());
+                logger.debug("Team {} created", playerRequestDTO.getTeamName());
+            }
+            playerId = savePlayer(playerRequestDTO, teamId);
+            logger.debug("Player {} created", playerRequestDTO.getName());
         }
-
-        int teamId = getTeamIdByName(playerRequestDTO.getTeamName());
-        if (teamId == -1) {
-            teamId = saveTeam(playerRequestDTO.getTeamName());
-            logger.debug("Team {} created", playerRequestDTO.getTeamName());
-        }
-
-        Long playerId = savePlayer(playerRequestDTO, teamId);
-        logger.debug("Player {} created", playerRequestDTO.getName());
         saveGameStats(playerRequestDTO, playerId);
         logger.debug("Game stats for player {} created", playerRequestDTO.getName());
     }
 
-    private boolean checkIfPlayerExists(String idNumber) {
-        String sql = "SELECT COUNT(*) FROM players WHERE id_number = ?";
-        int count = jdbcTemplate.queryForObject(sql, new Object[]{idNumber}, Integer.class);
-        return count > 0;
+    private Integer getPlayerIdByIdNumber(String idNumber) {
+        String sql = "SELECT id FROM players WHERE id_number = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{idNumber}, Integer.class);
+        } catch (EmptyResultDataAccessException e) {
+            return -1;
+        }
     }
 
     public Integer getTeamIdByName(String teamName) {
@@ -59,14 +58,14 @@ public class PlayerService {
         return jdbcTemplate.queryForObject(selectSql, new Object[]{teamName}, Integer.class);
     }
 
-    private Long savePlayer(PlayerRequestDTO playerRequestDTO, int teamId) {
+    private Integer savePlayer(PlayerRequestDTO playerRequestDTO, int teamId) {
         String sql = "INSERT INTO players (name, id_number, team_id) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, playerRequestDTO.getName(), playerRequestDTO.getIdNumber(), teamId);
         String selectSql = "SELECT id FROM players WHERE id_number = ?";
-        return jdbcTemplate.queryForObject(selectSql, new Object[]{playerRequestDTO.getIdNumber()}, Long.class);
+        return jdbcTemplate.queryForObject(selectSql, new Object[]{playerRequestDTO.getIdNumber()}, Integer.class);
     }
 
-    private void saveGameStats(PlayerRequestDTO playerRequestDTO, Long playerId) {
+    private void saveGameStats(PlayerRequestDTO playerRequestDTO, Integer playerId) {
         String sql = "INSERT INTO game_stats (game_date, player_id, points, rebounds, assists, steals, blocks, fouls, turnovers, minutes_played)\n" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         GameStats gameStats = playerRequestDTO.getGameStats();

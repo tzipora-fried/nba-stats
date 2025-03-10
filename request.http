@@ -6,13 +6,13 @@ Content-Type: application/json
   "idNumber": "123456744",
   "teamName": "Team Home",
   "gameStats": {
-    "gameDate": "2025-03-08T20:00:00",
-    "points": 25,
-    "rebounds": 10,
-    "assists": 5,
-    "steals": 2,
+    "gameDate": "2025-03-07T20:00:00",
+    "points": 27,
+    "rebounds": 8,
+    "assists": 6,
+    "steals": 3,
     "blocks": 1,
-    "fouls": 3,
+    "fouls": 2,
     "turnovers": 4,
     "minutesPlayed": 34.5
   }

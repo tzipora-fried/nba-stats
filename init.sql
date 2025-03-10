@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS game_stats
 CREATE TABLE IF NOT EXISTS  change_log
 (
     id          INT AUTO_INCREMENT PRIMARY KEY,
-    entity_type ENUM('player', 'team') NOT NULL,
-    entity_id   INT NOT NULL,
+    player_id   INT NOT NULL,
+    season_year INT NOT NULL,
     change_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -50,25 +50,17 @@ CREATE TRIGGER after_player_stats_update
     AFTER INSERT ON game_stats
     FOR EACH ROW
 BEGIN
-    INSERT INTO change_log (entity_type, entity_id)
-    VALUES ('player', NEW.player_id);
-    END$$
-
-    CREATE TRIGGER after_team_stats_update
-        AFTER INSERT ON game_stats
-        FOR EACH ROW
-    BEGIN
-        DECLARE team_id INT DEFAULT NULL;
-
-        SELECT team_id INTO team_id FROM players WHERE id = NEW.player_id LIMIT 1;
-
-        IF team_id IS NOT NULL THEN
-        INSERT INTO change_log (entity_type, entity_id)
-        VALUES ('team', team_id);
-    END IF;
+    DECLARE seasonYear INT;
+    SET seasonYear = YEAR(NEW.game_date);
+    INSERT INTO change_log (player_id, season_year)
+    VALUES (NEW.player_id, seasonYear);
     END$$
 
     DELIMITER ;
+
+
+
+
 
 
 

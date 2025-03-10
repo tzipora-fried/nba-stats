@@ -27,24 +27,19 @@ public class RedisUpdater {
         List<Map<String, Object>> changes = jdbcTemplate.queryForList("SELECT * FROM change_log");
 
         for (Map<String, Object> change : changes) {
-            String entityType = (String) change.get("entity_type");
-            int entityId = (Integer) change.get("entity_id");
-            String seasonYear = (String) change.get("season_year");
-            if ("player".equals(entityType)) {
-                updatePlayerStats(entityId, seasonYear);
-                logger.debug("Updated stats for player {}", entityId);
-            } else if ("team".equals(entityType)) {
-                updateTeamStats(entityId, seasonYear);
-                logger.debug("Updated stats for team {}", entityId);
-            }
+            int playerId = (Integer) change.get("player_id");
+            int seasonYear = (Integer) change.get("season_year");
+            updatePlayerStats(playerId, seasonYear);
+            Integer teamId = getTeamId(playerId);
+            updateTeamStats(teamId, seasonYear);
         }
 
         jdbcTemplate.update("DELETE FROM change_log");
         logger.debug("Cleared change log");
     }
 
-    private void updatePlayerStats(int playerId, String seasonYear) {
-        String sql = "SELECT player_id, AVG(points) as avg_points, AVG(rebounds) as avg_rebounds, " +
+    private void updatePlayerStats(int playerId, int seasonYear) {
+        String sql = "SELECT player_id, AVG(points) as avg_points, AVG(rebounds) as avg_rebounds, AVG(assists) as avg_assists, AVG(steals) as avg_steals , AVG(blocks) as avg_blocks, AVG(fouls) as avg_fouls, AVG(turnovers) as avg_turnovers, " +
                 "YEAR(game_date) as season_year " +
                 "FROM game_stats WHERE player_id = ? AND YEAR(game_date) = ? GROUP BY player_id, YEAR(game_date)";
         Map<String, Object> stats = jdbcTemplate.queryForMap(sql, playerId, seasonYear);
@@ -53,10 +48,11 @@ public class RedisUpdater {
         String redisKey = "player:" + playerId + ":season:" + seasonYear;
         redisTemplate.opsForHash().put(redisKey, "avg_points", stats.get("avg_points"));
         redisTemplate.opsForHash().put(redisKey, "avg_rebounds", stats.get("avg_rebounds"));
+        redisTemplate.opsForHash().put(redisKey, "avg_rebounds", stats.get("avg_rebounds"));
     }
 
-    private void updateTeamStats(int teamId, String seasonYear) {
-        String sql = "SELECT team_id, AVG(points) as avg_points, AVG(rebounds) as avg_rebounds, " +
+    private void updateTeamStats(int teamId, Integer seasonYear) {
+        String sql = "SELECT team_id, AVG(points) as avg_points, AVG(rebounds) as avg_rebounds, AVG(assists) as avg_assists, AVG(steals) as avg_steals , AVG(blocks) as avg_blocks, AVG(fouls) as avg_fouls, AVG(turnovers) as avg_turnovers, " +
                 "YEAR(game_date) as season_year " +
                 "FROM game_stats INNER JOIN players ON game_stats.player_id = players.id " +
                 "WHERE team_id = ? AND YEAR(game_date) = ? GROUP BY team_id, YEAR(game_date)";
@@ -66,5 +62,11 @@ public class RedisUpdater {
         String redisKey = "team:" + teamId + ":season:" + seasonYear;
         redisTemplate.opsForHash().put(redisKey, "avg_points", stats.get("avg_points"));
         redisTemplate.opsForHash().put(redisKey, "avg_rebounds", stats.get("avg_rebounds"));
+    }
+
+    private Integer getTeamId(Integer playerId) {
+        String sql = "SELECT team_id FROM players WHERE id = ?";
+        int team_id = jdbcTemplate.queryForObject(sql, new Object[]{playerId}, Integer.class);
+        return team_id;
     }
 }
