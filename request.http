@@ -7,13 +7,13 @@ Content-Type: application/json
   "teamName": "Team Home",
   "gameStats": {
     "gameDate": "2025-03-07T20:00:00",
-    "points": 27,
-    "rebounds": 8,
-    "assists": 6,
+    "points": 28,
+    "rebounds": 9,
+    "assists": 5,
     "steals": 3,
     "blocks": 1,
     "fouls": 2,
     "turnovers": 4,
-    "minutesPlayed": 34.5
+    "minutesPlayed": 2
   }
 }

@@ -15,24 +15,35 @@ public class StatsController {
 
     @Autowired
     private StatsService statsService;
+
     @GetMapping("/player/{playerId}/season/{seasonYear}")
-    public Map<Object, Object> getPlayerStats(@PathVariable int playerId, @PathVariable String seasonYear) {
-        Map<Object, Object> stats = statsService.getPlayerStats(playerId, seasonYear);
-        if (stats == null) {
-            logger.error("No stats found for player ID: {} in season: {}", playerId, seasonYear);
-            return null;
+    public Map<Object, Object> getPlayerStats(@PathVariable String playerId, @PathVariable String seasonYear) {
+        try {
+            Map<Object, Object> stats = statsService.getPlayerStats(playerId, seasonYear);
+            if (stats == null) {
+                logger.error("No stats found for player ID: {} in season: {}", playerId, seasonYear);
+                return null;
+            }
+            return stats;
+        } catch (Exception e) {
+            logger.error("Error getting player stats: {}", e.getMessage());
+            throw e;
         }
-        return stats;
     }
 
     @GetMapping("/team/{teamId}/season/{seasonYear}")
-    public Map<Object, Object> getTeamStats(@PathVariable int teamId, @PathVariable String seasonYear) {
-        Map<Object, Object> stats = statsService.getTeamStats(teamId, seasonYear);
-        if (stats == null) {
-            logger.error("No stats found for team ID: {} in season: {}", teamId, seasonYear);
-            return null;
+    public Map<Object, Object> getTeamStats(@PathVariable String teamName, @PathVariable String seasonYear) {
+        try {
+            Map<Object, Object> stats = statsService.getTeamStats(teamName, seasonYear);
+            if (stats == null) {
+                logger.error("No stats found for team Name: {} in season: {}", teamName, seasonYear);
+                return null;
+            }
+            return stats;
+        } catch (Exception e) {
+            logger.error("Error getting team stats: {}", e.getMessage());
+            throw e;
         }
-        return stats;
     }
 
 }

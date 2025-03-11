@@ -25,39 +25,37 @@ public class RedisUpdater {
     @Scheduled(fixedRate = 60000)
     public void updateRedisCache() {
         List<Map<String, Object>> changes = jdbcTemplate.queryForList("SELECT * FROM change_log");
-
         for (Map<String, Object> change : changes) {
             int playerId = (Integer) change.get("player_id");
             int seasonYear = (Integer) change.get("season_year");
-            updatePlayerStats(playerId, seasonYear);
+            savePlayerStats(playerId, seasonYear);
             Integer teamId = getTeamId(playerId);
-            updateTeamStats(teamId, seasonYear);
+            saveTeamStats(teamId, seasonYear);
         }
-
         jdbcTemplate.update("DELETE FROM change_log");
         logger.debug("Cleared change log");
     }
 
-    private void updatePlayerStats(int playerId, int seasonYear) {
+    public void savePlayerStats(int playerId, int seasonYear) {
         String sql = "SELECT player_id, AVG(points) as avg_points, AVG(rebounds) as avg_rebounds, AVG(assists) as avg_assists, AVG(steals) as avg_steals , AVG(blocks) as avg_blocks, AVG(fouls) as avg_fouls, AVG(turnovers) as avg_turnovers, " +
                 "YEAR(game_date) as season_year " +
                 "FROM game_stats WHERE player_id = ? AND YEAR(game_date) = ? GROUP BY player_id, YEAR(game_date)";
         Map<String, Object> stats = jdbcTemplate.queryForMap(sql, playerId, seasonYear);
         String redisKey = "player:" + playerId + ":season:" + seasonYear;
-        setAvgStats(stats, redisKey);
+        saveAverageStatsToRedis(stats, redisKey);
     }
 
-    private void updateTeamStats(int teamId, Integer seasonYear) {
+    public void saveTeamStats(int teamId, Integer seasonYear) {
         String sql = "SELECT team_id, AVG(points) as avg_points, AVG(rebounds) as avg_rebounds, AVG(assists) as avg_assists, AVG(steals) as avg_steals , AVG(blocks) as avg_blocks, AVG(fouls) as avg_fouls, AVG(turnovers) as avg_turnovers, " +
                 "YEAR(game_date) as season_year " +
                 "FROM game_stats INNER JOIN players ON game_stats.player_id = players.id " +
                 "WHERE team_id = ? AND YEAR(game_date) = ? GROUP BY team_id, YEAR(game_date)";
         Map<String, Object> stats = jdbcTemplate.queryForMap(sql, teamId, seasonYear);
         String redisKey = "team:" + teamId + ":season:" + seasonYear;
-        setAvgStats(stats, redisKey);
+        saveAverageStatsToRedis(stats, redisKey);
     }
 
-    private void setAvgStats(Map<String, Object> stats, String redisKey) {
+    private void saveAverageStatsToRedis(Map<String, Object> stats, String redisKey) {
         redisTemplate.opsForHash().put(redisKey, "avg_points", stats.get("avg_points"));
         redisTemplate.opsForHash().put(redisKey, "avg_rebounds", stats.get("avg_rebounds"));
         redisTemplate.opsForHash().put(redisKey, "avg_assists", stats.get("avg_assists"));

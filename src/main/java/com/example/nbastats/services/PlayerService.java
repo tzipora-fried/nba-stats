@@ -36,7 +36,7 @@ public class PlayerService {
         logger.debug("Game stats for player {} created", playerRequestDTO.getName());
     }
 
-    private Integer getPlayerIdByIdNumber(String idNumber) {
+    public Integer getPlayerIdByIdNumber(String idNumber) {
         String sql = "SELECT id FROM players WHERE id_number = ?";
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{idNumber}, Integer.class);
