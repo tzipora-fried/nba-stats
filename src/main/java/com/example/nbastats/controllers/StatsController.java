@@ -31,7 +31,7 @@ public class StatsController {
         }
     }
 
-    @GetMapping("/team/{teamId}/season/{seasonYear}")
+    @GetMapping("/team/{teamName}/season/{seasonYear}")
     public Map<Object, Object> getTeamStats(@PathVariable String teamName, @PathVariable String seasonYear) {
         try {
             Map<Object, Object> stats = statsService.getTeamStats(teamName, seasonYear);
