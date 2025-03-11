@@ -36,41 +36,48 @@ cd nba-stats
 docker-compose up --build
 ```
 
-`
-The API will be accessible at:
-http://localhost:8080
-`
 ---
 
 ## API Endpoints
 
 ### **1. Create Player**
-**POST** `/players`
-```json
-{
-  "id_number": "12345",
-  "name": "LeBron James",
-  "team_name": "Lakers",
-  "game_stats": {
-    "game_date": "2024-03-10",
-    "points": 30,
-    "rebounds": 8,
-    "assists": 10,
-    "steals": 2,
-    "blocks": 1,
-    "fouls": 3,
-    "turnovers": 4,
-    "minutes_played": 35
-  }
-}
+**POST** `api/players/create`
+#### Command for Linux/MacOS:
+```sh
+curl -X POST "http://localhost:8080/api/players/create" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "name": "Player One",
+           "idNumber": "123456744",
+           "teamName": "Team1",
+           "gameStats": {
+             "gameDate": "2025-03-07T20:00:00",
+             "points": 10,
+             "rebounds": 9,
+             "assists": 5,
+             "steals": 3,
+             "blocks": 1,
+             "fouls": 2,
+             "turnovers": 4,
+             "minutesPlayed": 2
+           }
+         }'
 ```
 
 ### **2. Get Player Stats**
-**GET** `/api/stats/player/{playerId}/season/{seasonYear}`
+**GET** `/api/stats/player/{idNumber}/season/{seasonYear}`
+```sh
+curl -X GET "http://localhost:8080/api/stats/player/123456744/season/2025" \
+-H "Accept: application/json"
+```
 
 ### **3. Get Team Stats**
 **GET** `/api/stats/team/{teamId}/season/{seasonYear}`
 
+```sh
+curl -X GET "http://localhost:8080/api/stats/team/Team1/season/2025" \
+-H "Accept: application/json"
+```
 ---
 
 ## Database Schema
