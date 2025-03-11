@@ -11,50 +11,33 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
-      - "3307:3306"
+      - "3307:3306"  # מיפוי פורט 3307 במחשב המקומי לפורט 3306 בקונטיינר
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-
-  mysql_test:
-    image: mysql:8.0
-    container_name: nba_stats_db_test
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: nba_stats_test
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-    ports:
-      - "3308:3306"
-    volumes:
-      - mysql_data_test:/var/lib/mysql
-      - ./init-test.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # קובץ SQL למילוי נתונים ראשוניים אם יש
 
   redis:
     image: redis:alpine
     container_name: nba_stats_redis
     restart: always
     ports:
-      - "6379:6379"
+      - "6379:6379"  # מיפוי פורט 6379 במחשב המקומי לפורט 6379 בקונטיינר
 
   app:
-    build: .
+    build: .  # ייבנה את הקונטיינר מה-Dockerfile שממוקם בתיקייה הנוכחית
     container_name: nba_stats_app
     depends_on:
       - mysql
       - redis
     ports:
-      - "8080:8080"
+      - "8080:8080"  # מיפוי פורט 8080 במחשב המקומי לפורט 8080 בקונטיינר של האפליקציה
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://nba_stats_db:3306/nba_stats
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_REDIS_HOST: nba_stats_redis
       SPRING_REDIS_PORT: 6379
-
-    command: ["java", "-jar", "/app/build/libs/NBAStats-1.0-SNAPSHOT.jar"]
+    command: ["java", "-jar", "/app/build/libs/NBAStats-1.0-SNAPSHOT.jar"]  # הפקודה להרצת האפליקציה שלך
 
 volumes:
-  mysql_data:
-  mysql_data_test:
+  mysql_data:  # יצירת ווליום עבור נתוני MySQL

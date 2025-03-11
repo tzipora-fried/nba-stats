@@ -1,1 +1,1 @@
-GET http://localhost:8080/stats/player/1/season/2025
+GET http://localhost:8080/api/stats/player/123456744/season/2025

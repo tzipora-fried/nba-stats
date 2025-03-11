@@ -7,7 +7,7 @@ Content-Type: application/json
   "teamName": "Team Home",
   "gameStats": {
     "gameDate": "2025-03-07T20:00:00",
-    "points": 28,
+    "points": 10,
     "rebounds": 9,
     "assists": 5,
     "steals": 3,
