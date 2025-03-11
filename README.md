@@ -13,23 +13,22 @@ This project is a system for managing and retrieving NBA player statistics effic
 
 ##  System Architecture
 
-![image](https://github.com/user-attachments/assets/0044a167-2e52-4e0d-8980-db2a62055fa7)
-
+![img.png](img.png)
 ---
 
 ##  How to Run the Project
 
 ### **1. Clone the Repository**
 ```sh
-git clone https://github.com/your-repo/nba-stats.git
+git clone https://github.com/tzipora-fried/nba-stats.git
 ```
 ### **2. Navigate into the project directory**
 ```sh
-cd NBAStats
+cd nba-stats
 ```
 ### **3. Build the project using Gradle:**
 ```sh
-gradle build
+./gradlew build 
 ```
 
 ### **4. Start the application and required services using Docker Compose**
@@ -40,7 +39,6 @@ docker-compose up --build
 The API will be accessible at:
 http://localhost:8080
 `
-
 ---
 
 ## API Endpoints
@@ -86,7 +84,7 @@ _
 - **Scheduled Job (Every Minute)**:
     1. Checks `change_log` for new records.
     2. Calculates **average player stats** and **average team stats**.
-    3. Updates Redis with fresh stats.
+    3. Updates Redis with updated stats.
 
 ---
 
