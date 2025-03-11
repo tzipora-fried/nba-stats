@@ -1,6 +1,5 @@
 package com.example.nbastats.services;
 
-import com.example.nbastats.controllers.StatsController;
 import com.example.nbastats.dto.GameStats;
 import com.example.nbastats.dto.PlayerRequestDTO;
 import org.slf4j.Logger;
@@ -18,7 +17,11 @@ public class PlayerService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private PlayerStatsValidator playerStatsValidator;
+
     public void createPlayer(PlayerRequestDTO playerRequestDTO) {
+        playerStatsValidator.validateStats(playerRequestDTO.getGameStats());
         Integer playerId = getPlayerIdByIdNumber(playerRequestDTO.getIdNumber());
         if (playerId == -1) {
             int teamId = getTeamIdByName(playerRequestDTO.getTeamName());
