@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/stats")
+@RequestMapping("/api/stats")
 public class StatsController {
     private static final Logger logger = LoggerFactory.getLogger(StatsController.class);
 

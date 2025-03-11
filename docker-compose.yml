@@ -11,7 +11,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
-      - "3307:3306"  # הפורט החיצוני למחשב שלך יהיה 3307
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -22,11 +22,11 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: nba_stats_test  # בסיס נתונים לבדיקה
+      MYSQL_DATABASE: nba_stats_test
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
-      - "3308:3306"  # פורט נפרד עבור בסיס הנתונים של הבדיקות
+      - "3308:3306"
     volumes:
       - mysql_data_test:/var/lib/mysql
       - ./init-test.sql:/docker-entrypoint-initdb.d/init.sql
@@ -41,22 +41,19 @@ services:
   app:
     build: .
     container_name: nba_stats_app
-    restart: always
     depends_on:
       - mysql
       - redis
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://nba_stats_db:3307/nba_stats
+      SPRING_DATASOURCE_URL: jdbc:mysql://nba_stats_db:3306/nba_stats
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_REDIS_HOST: nba_stats_redis
       SPRING_REDIS_PORT: 6379
-    volumes:
-      - .:/app
-    command: [ "java", "-jar", "/app/build/libs/NBAStats-*.jar" ]
 
+    command: ["java", "-jar", "/app/build/libs/NBAStats-1.0-SNAPSHOT.jar"]
 
 volumes:
   mysql_data:

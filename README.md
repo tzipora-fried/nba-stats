@@ -1,6 +1,6 @@
-# NBA Stats Backend
+# NBA Stats 
 
-This project is a backend system for managing and retrieving NBA player statistics efficiently using **Spring Boot**, **MySQL**, **Redis**, and **scheduled jobs**.
+This project is a system for managing and retrieving NBA player statistics efficiently using **Spring Boot**, **MySQL**, **Redis**, and **scheduled jobs**.
 
 ##  Features
 - **Create Player API**: Inserts player data into MySQL, creates teams if they don’t exist, and logs player statistics.
@@ -22,40 +22,28 @@ This project is a backend system for managing and retrieving NBA player statisti
 ### **1. Clone the Repository**
 ```sh
 git clone https://github.com/your-repo/nba-stats.git
-cd nba-stats
 ```
-
-### **2. Set Up MySQL Database**
-- Ensure MySQL is running (use Docker or local installation).
-- Create the database:
-```sql
-CREATE DATABASE nba_stats;
-```
-- Update `application.properties` with your MySQL credentials.
-
-### **3. Run MySQL in Docker (Optional)**
+### **2. Navigate into the project directory**
 ```sh
-docker run --name nba-mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=nba_stats -p 3306:3306 -d mysql:latest
+cd NBAStats
+```
+### **3. Build the project using Gradle:**
+```sh
+gradle build
 ```
 
-### **4. Start Redis (Optional, using Docker)**
+### **4. Start the application and required services using Docker Compose**
 ```sh
-docker run --name nba-redis -p 6379:6379 -d redis:latest
+docker-compose up --build
 ```
 
-### **5. Build & Run the Application**
-```sh
-./gradlew bootRun
-```
-
-### **6. Running Tests**
-```sh
-./gradlew test
-```
+The API will be accessible at:
+http://localhost:8080
+`
 
 ---
 
-## 🛠 API Endpoints
+## API Endpoints
 
 ### **1. Create Player**
 **POST** `/players`
@@ -79,15 +67,17 @@ docker run --name nba-redis -p 6379:6379 -d redis:latest
 ```
 
 ### **2. Get Player Stats**
-**GET** `/players/{player_id}/stats`
+**GET** `/api/stats/player/{playerId}/season/{seasonYear}`
 
 ### **3. Get Team Stats**
-**GET** `/teams/{team_id}/stats`
+**GET** `/api/stats/team/{teamId}/season/{seasonYear}`
 
 ---
 
 ## Database Schema
 _
+
+![img_1.png](img_1.png)
 
 ---
 
@@ -99,5 +89,13 @@ _
     3. Updates Redis with fresh stats.
 
 ---
+
+## Future Improvements
+
+Initially, I planned to implement this system using **Debezium** for real-time change data capture (CDC) instead of using database triggers and scheduled jobs.  
+However, due to time constraints, I opted for a more straightforward approach with MySQL triggers and scheduled tasks.
+
+A future iteration of this project could replace the **change_log** table and scheduled jobs with **Debezium** to stream database changes directly to **Kafka**, ensuring real-time updates to Redis with improved scalability and reliability.
+
 
 
