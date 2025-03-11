@@ -72,7 +72,7 @@ curl -X GET "http://localhost:8080/api/stats/player/123456744/season/2025" \
 ```
 
 ### **3. Get Team Stats**
-**GET** `/api/stats/team/{teamId}/season/{seasonYear}`
+**GET** `/api/stats/team/{teamName}/season/{seasonYear}`
 
 ```sh
 curl -X GET "http://localhost:8080/api/stats/team/Team1/season/2025" \
