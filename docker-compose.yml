@@ -38,25 +38,26 @@ services:
     ports:
       - "6379:6379"
 
-#  app:
-#    build: .
-#    container_name: nba_stats_app
-#    restart: always
-#    depends_on:
-#      - mysql
-#      - redis
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:mysql://nba_stats_db_dev:3306/nba_stats
-#      SPRING_DATASOURCE_USERNAME: user
-#      SPRING_DATASOURCE_PASSWORD: password
-#      SPRING_REDIS_HOST: nba_stats_redis
-#      SPRING_REDIS_PORT: 6379
-#    volumes:
-#      - .:/app
-#    command: ["java", "-jar", "/app/build/libs/nba-stats-*.jar"]
-#
+  app:
+    build: .
+    container_name: nba_stats_app
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://nba_stats_db:3307/nba_stats
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_REDIS_HOST: nba_stats_redis
+      SPRING_REDIS_PORT: 6379
+    volumes:
+      - .:/app
+    command: [ "java", "-jar", "/app/build/libs/NBAStats-*.jar" ]
+
+
 volumes:
   mysql_data:
   mysql_data_test:

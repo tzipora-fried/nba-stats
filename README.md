@@ -2,22 +2,22 @@
 
 This project is a backend system for managing and retrieving NBA player statistics efficiently using **Spring Boot**, **MySQL**, **Redis**, and **scheduled jobs**.
 
-## 📌 Features
+##  Features
 - **Create Player API**: Inserts player data into MySQL, creates teams if they don’t exist, and logs player statistics.
-- **Get Player Stats API**: Fetches average statistics per player from Redis.
-- **Get Team Stats API**: Fetches average statistics per team from Redis.
-- **Database Triggers**: Logs player and team changes in `change_log` when new game statistics are inserted.
-- **Scheduled Job (Every 1 Minute)**: Processes new records in `change_log`, calculates averages, and updates Redis.
+- **Get Player Stats API**: Fetches average statistics per player and season from Redis.
+- **Get Team Stats API**: Fetches average statistics per team and season from Redis.
+- **Database Triggers**: Logs player and season changes in `change_log` when new game statistics are inserted.
+- **Scheduled Job (Every 1 Minute)**: Processes new records in `change_log`, calculates averages, and updates stats in Redis.
 
 ---
 
-## 📊 System Architecture
+##  System Architecture
 
 ![image](https://github.com/user-attachments/assets/0044a167-2e52-4e0d-8980-db2a62055fa7)
 
 ---
 
-## 🚀 How to Run the Project
+##  How to Run the Project
 
 ### **1. Clone the Repository**
 ```sh
@@ -86,13 +86,13 @@ docker run --name nba-redis -p 6379:6379 -d redis:latest
 
 ---
 
-## 🏗 Database Schema
-_(Insert your database schema diagram here)_
+## Database Schema
+_
 
 ---
 
-## 📅 Background Job & Triggers
-- **Trigger on `game_stats` Insert**: Logs player & team ID in `change_log`.
+## Background Job & Triggers
+- **Trigger on `game_stats` Insert**: Logs player ID and Season year in `change_log`.
 - **Scheduled Job (Every Minute)**:
     1. Checks `change_log` for new records.
     2. Calculates **average player stats** and **average team stats**.
@@ -100,11 +100,4 @@ _(Insert your database schema diagram here)_
 
 ---
 
-## 👥 Contributors
-- **Your Name** ([@your-github](https://github.com/your-github))
-
----
-
-## 📜 License
-This project is licensed under the MIT License.
 
