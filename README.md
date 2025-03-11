@@ -36,6 +36,7 @@ cd nba-stats
 docker-compose up --build
 ```
 
+`
 The API will be accessible at:
 http://localhost:8080
 `
